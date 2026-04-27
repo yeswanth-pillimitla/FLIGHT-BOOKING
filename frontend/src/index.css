@@ -1,0 +1,58 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  body {
+    @apply text-dark font-sans bg-[#F3F4F6];
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white border border-gray-100 rounded-2xl shadow-sm;
+  }
+  
+  .glass-button {
+    @apply bg-primary hover:bg-primary-deep text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 active:scale-95 shadow-md shadow-blue-900/10 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .glass-button-primary {
+    @apply bg-primary hover:bg-primary-deep text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 active:scale-95 shadow-md shadow-blue-900/10 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .glass-input {
+    @apply bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-secondary focus:ring-4 focus:ring-secondary/10 transition-all text-dark placeholder-gray-400;
+  }
+}
+
+/* Page Transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-gray-50;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-200 rounded-full hover:bg-blue-300;
+}
