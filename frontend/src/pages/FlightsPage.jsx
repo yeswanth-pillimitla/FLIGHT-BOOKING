@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Filter, SortAsc, Clock, Plane, Info, Search } from 'lucide-react';
 import MainLayout from '../components/MainLayout';
+import toast from 'react-hot-toast';
 
 const FlightCard = ({ flight, onBook }) => (
   <div className="bg-white border border-gray-100 rounded-[28px] shadow-sm p-5 space-y-4 hover:border-primary/40 transition-all group">
@@ -55,13 +56,30 @@ const FlightsPage = () => {
         const response = await fetch(`http://localhost:5000/api/flights/search?${query}`);
         const result = await response.json();
         if (result.success) {
-          const formattedFlights = result.data.map(f => ({
-            id: f._id, airline: f.airline, flightNumber: f.flightNumber, source: f.source, destination: f.destination,
-            departureTime: new Date(f.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
-            arrivalTime: new Date(f.arrivalTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
-            duration: `${Math.round((new Date(f.arrivalTime) - new Date(f.departureTime)) / (1000 * 60 * 60))}h ${Math.round(((new Date(f.arrivalTime) - new Date(f.departureTime)) % (1000 * 60 * 60)) / (1000 * 60))}m`,
-            price: f.price, logo: f.logo, category: f.category || f.type || 'Domestic'
-          }));
+          if (result.categoryMismatch) {
+            toast.error(result.message);
+          }
+          const formattedFlights = result.data.map(f => {
+            const depDate = new Date(f.departureTime);
+            const arrDate = new Date(f.arrivalTime);
+            
+            const depTime = isNaN(depDate.getTime()) ? f.departureTime : depDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            const arrTime = isNaN(arrDate.getTime()) ? f.arrivalTime : arrDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            
+            let duration = f.duration;
+            if (!duration && !isNaN(depDate.getTime()) && !isNaN(arrDate.getTime())) {
+              const diff = arrDate - depDate;
+              duration = `${Math.round(diff / (1000 * 60 * 60))}h ${Math.round((diff % (1000 * 60 * 60)) / (1000 * 60))}m`;
+            }
+
+            return {
+              id: f._id, airline: f.airline, flightNumber: f.flightNumber, source: f.source, destination: f.destination,
+              departureTime: depTime,
+              arrivalTime: arrTime,
+              duration: duration || 'N/A',
+              price: f.price, logo: f.logo, category: f.category || f.type || 'Domestic'
+            };
+          });
           setFlights(formattedFlights);
         }
       } catch (error) { console.error('Error fetching flights:', error); }

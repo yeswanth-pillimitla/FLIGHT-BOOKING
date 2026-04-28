@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Calendar, Truck, ChevronDown, Package, Clock } from 'lucide-react';
+import { MapPin, Calendar, Truck, ChevronDown, Package } from 'lucide-react';
 import MainLayout from '../components/MainLayout';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -9,7 +9,7 @@ const CargoBookingPage = () => {
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [date, setDate] = useState('');
-  const [departureTime, setDepartureTime] = useState('');
+
   const [weight, setWeight] = useState('');
   const [cargoType, setCargoType] = useState('General');
   const [deliverySpeed, setDeliverySpeed] = useState('Standard');
@@ -19,7 +19,7 @@ const CargoBookingPage = () => {
     e.preventDefault();
     
     // Validation
-    if (!from || !to || !date || !departureTime || !weight || !cargoType || !deliverySpeed) {
+    if (!from || !to || !date || !weight || !cargoType || !deliverySpeed) {
       return toast.error('Please fill in all fields');
     }
 
@@ -39,7 +39,6 @@ const CargoBookingPage = () => {
           origin: from,
           destination: to,
           shipment_date: date,
-          departure_time: departureTime,
           weight: parseFloat(weight),
           cargo_type: cargoType,
           delivery_speed: deliverySpeed
@@ -54,7 +53,6 @@ const CargoBookingPage = () => {
         setFrom('');
         setTo('');
         setDate('');
-        setDepartureTime('');
         setWeight('');
         setCargoType('General');
         setDeliverySpeed('Standard');
@@ -103,13 +101,7 @@ const CargoBookingPage = () => {
                 <input type="date" className="w-full bg-surface border border-gray-100 rounded-2xl p-4 text-dark font-bold focus:border-primary transition-colors outline-none pl-12" value={date} onChange={(e) => setDate(e.target.value)} />
               </div>
             </div>
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-gray-400 ml-1 uppercase tracking-widest">Departure Time</label>
-              <div className="relative">
-                <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary" size={18} />
-                <input type="text" placeholder="Enter Time" onFocus={(e) => e.target.type = 'time'} onBlur={(e) => { if (!e.target.value) e.target.type = 'text'; }} className="w-full bg-surface border border-gray-100 rounded-2xl p-4 text-dark font-bold focus:border-primary transition-colors outline-none pl-12" value={departureTime} onChange={(e) => setDepartureTime(e.target.value)} />
-              </div>
-            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="text-[10px] font-bold text-gray-400 ml-1 uppercase tracking-widest">Weight (kg)</label>

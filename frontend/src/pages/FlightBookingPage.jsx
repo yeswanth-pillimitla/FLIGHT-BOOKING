@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Calendar, Users, ChevronDown, Repeat2, Plane, Globe, Clock } from 'lucide-react';
+import { MapPin, Calendar, Users, ChevronDown, Repeat2, Plane, Globe } from 'lucide-react';
 import MainLayout from '../components/MainLayout';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -11,7 +11,7 @@ const FlightBookingPage = () => {
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [departureDate, setDepartureDate] = useState('');
-  const [departureTime, setDepartureTime] = useState('');
+
   const [returnDate, setReturnDate] = useState('');
   const [flightClass, setFlightClass] = useState('Economy');
   const [passengers, setPassengers] = useState(1);
@@ -21,8 +21,8 @@ const FlightBookingPage = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!from || !to || !departureDate || !departureTime) return toast.error('Please fill in all required fields');
-    navigate('/flights', { state: { type: flightType, from, to, date: departureDate, time: departureTime, flightClass, passengers, tripType } });
+    if (!from || !to || !departureDate) return toast.error('Please fill in all required fields');
+    navigate('/flights', { state: { type: flightType, from, to, date: departureDate, flightClass, passengers, tripType } });
   };
 
   return (
@@ -87,13 +87,6 @@ const FlightBookingPage = () => {
               <div className="relative">
                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary" size={18} />
                 <input type="date" className="w-full bg-surface border border-gray-100 rounded-2xl p-4 text-dark font-bold focus:border-primary transition-colors outline-none pl-12" value={departureDate} onChange={(e) => setDepartureDate(e.target.value)} />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-gray-400 ml-1 uppercase tracking-widest">Departure Time</label>
-              <div className="relative">
-                <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary" size={18} />
-                <input type="text" placeholder="Enter Time" onFocus={(e) => e.target.type = 'time'} onBlur={(e) => { if (!e.target.value) e.target.type = 'text'; }} className="w-full bg-surface border border-gray-100 rounded-2xl p-4 text-dark font-bold focus:border-primary transition-colors outline-none pl-12" value={departureTime} onChange={(e) => setDepartureTime(e.target.value)} />
               </div>
             </div>
             {tripType === 'Round-trip' && (
