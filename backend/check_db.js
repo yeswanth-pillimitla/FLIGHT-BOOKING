@@ -20,5 +20,4 @@ const checkUsers = async () => {
     process.exit(1);
   }
 };
-
 checkUsers();
